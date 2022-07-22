@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const eventSchema = new Schema({
+    poster: {
+        type: String,
+        required: true
+    },
     title: {
         type: String,
         required: true

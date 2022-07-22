@@ -11,7 +11,8 @@ connectToMongo();
 app.use(cors());
 app.use(express.json());
 app.use(fileUpload({
-    useTempFiles: true
+    useTempFiles: true,
+    limits: { fileSize: 1024*1024*2}
 }));
 
 app.get('/', (req, res) => {
