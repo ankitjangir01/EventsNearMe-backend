@@ -30,8 +30,6 @@ router.post('/addevent', async (req, res) => {
         let event_poster_url = 'https://res.cloudinary.com/eventsnearme/image/upload/v1658493187/events-posters/addevents-default-poster_n7xzco.jpg';
         if (req.files) {
             let image = req.files.eventPoster;
-
-            console.log(image)
             await cloudinary.uploader.upload(image.tempFilePath, { folder: "events-posters" }, (err, result) => {
                 if (err) res.send("error uploading event poster");
                 event_poster_url = result.secure_url;
@@ -44,8 +42,8 @@ router.post('/addevent', async (req, res) => {
             description: req.body.description,
             address: req.body.address,
             city: req.body.city,
-            district: req.body.district,
             state: req.body.state,
+            PIN: req.body.PIN,
             country: req.body.country,
             days: req.body.days,
             date: req.body.date
@@ -55,6 +53,7 @@ router.post('/addevent', async (req, res) => {
         res.json({ success });
     }
     catch (err) {
+        console.log(err)
         res.status(400).json({ 'success': success, 'error': 'internal server error' });
     }
 })

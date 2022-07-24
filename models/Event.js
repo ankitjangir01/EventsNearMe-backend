@@ -22,12 +22,12 @@ const eventSchema = new Schema({
         type: String,
         required: true
     },
-    district: {
+    state: {
         type: String,
         required: true
     },
-    state: {
-        type: String,
+    PIN: {
+        type: Number,
         required: true
     },
     country: {
