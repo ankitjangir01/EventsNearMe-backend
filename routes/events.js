@@ -58,10 +58,16 @@ router.post('/addevent', async (req, res) => {
     }
 })
 
-// router.post('/addevent/uploadimage', async (req, res) => {
-
-//     else res.send("no image uploaded");
-// });
+router.post('/searchevent', async (req, res) => {
+    let success = false;
+    try {
+        const searchResult = await Event.find({'city': req.body.city});
+        success = true;
+        res.json({success, searchResult});
+    } catch (error) {
+        res.status(400).json({success, error});
+    }
+})
 
 
 module.exports = router;
