@@ -3,7 +3,6 @@ const express = require('express');
 const Event = require('../models/Event');
 const router = express.Router();
 const cloudinary = require('cloudinary').v2;
-const fileUpload = require('express-fileupload');
 
 cloudinary.config({
     cloud_name: 'eventsnearme',
