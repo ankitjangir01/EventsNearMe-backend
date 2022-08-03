@@ -52,10 +52,10 @@ router.post('/login', async (req, res) => {
     let success = false;
     const {email, password} = req.body;
     try{
-        const user = User.findOne({email});
+        const user = await User.findOne({email});
         if(!user) return res.status(400).json({success, error: "incorrect credentials"});
         //compare entered password with the saved password hash in database
-        let compare = await bcrypt.compare(req.body.password, user.password);
+        let compare = await bcrypt.compare(password, user.password);
         if(!compare) return res.status(400).json({success, error: "incorrect credentials"});
         //if compare returns true, then provide user with the json web token and payload
         const payload = {
@@ -68,6 +68,7 @@ router.post('/login', async (req, res) => {
         res.json({success, authToken});
     }
     catch(err){
+        console.log(err);
         res.status(400).json({success, error: err.message});
     }
 })

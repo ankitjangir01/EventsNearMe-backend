@@ -34,7 +34,6 @@ router.post('/addevent', async (req, res) => {
                 event_poster_url = result.secure_url;
             })
         }
-
         const event = new Event({
             poster: event_poster_url,
             title: req.body.title,
@@ -49,7 +48,7 @@ router.post('/addevent', async (req, res) => {
         });
         await event.save();
         success = true;
-        res.json({ success });
+        res.redirect(302, 'http://localhost:3000/addevent');
     }
     catch (err) {
         console.log(err)
