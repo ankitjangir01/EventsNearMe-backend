@@ -17,12 +17,14 @@ cloudinary.config({
 router.post('/createuser', async (req, res) => {
     let success = false;
     try {
-        const file = req.files.profilePhoto;
         var file_url = 'https://res.cloudinary.com/eventsnearme/image/upload/v1657774124/profile%20photos/eventsnearme-profile-photo-default_nwuhvi.png'
-        await cloudinary.uploader.upload(file.tempFilePath, async (err, result) => {
-            if(err) return err;
-            file_url = result.url;
-        })
+        if (req.files) {
+            const file = req.files.profilePhoto;
+            await cloudinary.uploader.upload(file.tempFilePath, async (err, result) => {
+                if (err) return err;
+                file_url = result.url;
+            })
+        }
 
         let user = await User.findOne({ email: req.body.email });
         if (user) {
@@ -40,23 +42,23 @@ router.post('/createuser', async (req, res) => {
             password: passwordHash
         });
         success = true;
-        res.json({ success });
+        res.redirect('http://localhost:3000/');
     } catch (err) {
         console.error(err);
         res.status(400).json({ success: success, error: "internal server error" });
     }
 })
 
-//login
+//---------------------------login
 router.post('/login', async (req, res) => {
     let success = false;
-    const {email, password} = req.body;
-    try{
-        const user = await User.findOne({email});
-        if(!user) return res.status(400).json({success, error: "incorrect credentials"});
+    const { email, password } = req.body;
+    try {
+        const user = await User.findOne({ email });
+        if (!user) return res.status(400).json({ success, error: "incorrect credentials" });
         //compare entered password with the saved password hash in database
-        let compare = await bcrypt.compare(password, user.password);
-        if(!compare) return res.status(400).json({success, error: "incorrect credentials"});
+        let compare = bcrypt.compare(password, user.password);
+        if (!compare) return res.status(400).json({ success, error: "incorrect credentials" });
         //if compare returns true, then provide user with the json web token and payload
         const payload = {
             user: {
@@ -65,11 +67,11 @@ router.post('/login', async (req, res) => {
         }
         const authToken = jwt.sign(payload, process.env.JWT_SECRET);
         success = true;
-        res.json({success, authToken});
+        res.json({ success, authToken });
     }
-    catch(err){
+    catch (err) {
         console.log(err);
-        res.status(400).json({success, error: err.message});
+        res.status(400).json({ success, error: err.message });
     }
 })
 
